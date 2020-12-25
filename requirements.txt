@@ -1,0 +1,5 @@
+click==7.1.2
+click_aliases==1.0.1
+termcolor==1.1.0
+requests==2.25.1
+bs4==0.0.1
