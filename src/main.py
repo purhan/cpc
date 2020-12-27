@@ -47,7 +47,7 @@ def main():
     pass
 
 
-@main.command('scrape')
+@main.command("scrape")
 def scrape():
     """
     Start interactive solution scraper
@@ -56,16 +56,16 @@ def scrape():
 
 
 @main.command(
-    cls=CommandWithConfigFile('config_file'), name='stress_test', aliases=['st', 'test']
+    cls=CommandWithConfigFile("config_file"), name="stress_test", aliases=["st", "test"]
 )
-@click.option('--count', '-c')
-@click.option("--precommand", '-p')
-@click.option("--no_halt", '-nh')
-@click.option("--bruteforce", '-b', type=click.Path())
-@click.option("--optimized", '-o', type=click.Path())
-@click.option("--testcase_generator", '-tg', type=click.Path())
-@click.option("--config_file", '-cf', type=click.Path(), hidden=True)
-def test(config_file='.cpcrc', *args, **kwargs):
+@click.option("--count", "-c")
+@click.option("--precommand", "-p")
+@click.option("--no_halt", "-nh")
+@click.option("--bruteforce", "-b", type=click.Path())
+@click.option("--optimized", "-o", type=click.Path())
+@click.option("--testcase_generator", "-tg", type=click.Path())
+@click.option("--config_file", "-cf", type=click.Path(), hidden=True)
+def test(config_file=".cpcrc", *args, **kwargs):
     """
     Stress test a solution against bruteforce
     """

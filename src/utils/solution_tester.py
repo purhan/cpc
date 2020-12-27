@@ -13,11 +13,11 @@ def diff(old, new, display=True):
     if not isinstance(new, list):
         new = (str(new)).splitlines()
 
-    line_types = {' ': 'white', '-': 'red', '+': 'green', '?': 'pink'}
+    line_types = {" ": "white", "-": "red", "+": "green", "?": "pink"}
 
     if display:
         for line in difflib.Differ().compare(old, new):
-            if line.startswith('?') or line.startswith(' '):
+            if line.startswith("?") or line.startswith(" "):
                 continue
             print()
             print(colored(line, line_types[line[0]]))
@@ -34,32 +34,32 @@ def list_split(command):
 
 def main(*args, **kwargs):
     try:
-        precommand = str(kwargs['precommand'])
+        precommand = str(kwargs["precommand"])
         subprocess.call(list_split(precommand), shell=False)
     except:
         pass
 
-    tests_count = int(kwargs['count'] or 100)
+    tests_count = int(kwargs["count"] or 100)
     executables_exist = True
     try:
-        generator = kwargs['testcase_generator'] or 'generator'
-        with open(generator, encoding='utf-8') as f:
+        generator = kwargs["testcase_generator"] or "generator"
+        with open(generator, encoding="utf-8") as f:
             print(colored(f"testcase generator accesible as `{f.name}`", "green"))
     except:
         executables_exist = False
         print(colored("could not access testcase generator", "red"))
 
     try:
-        bruteforce = kwargs['bruteforce'] or 'bruteforce'
-        with open(bruteforce, encoding='utf-8') as f:
+        bruteforce = kwargs["bruteforce"] or "bruteforce"
+        with open(bruteforce, encoding="utf-8") as f:
             print(colored(f"bruteforce executable accesible as `{f.name}`", "green"))
     except:
         executables_exist = False
         print(colored("could not access bruteforce executable", "red"))
 
     try:
-        optimized = kwargs['optimized'] or 'optimized'
-        with open(optimized, encoding='utf-8') as f:
+        optimized = kwargs["optimized"] or "optimized"
+        with open(optimized, encoding="utf-8") as f:
             print(colored(f"optimized executable accesible as `{f.name}`", "green"))
     except:
         executables_exist = False
@@ -68,47 +68,47 @@ def main(*args, **kwargs):
     if not executables_exist:
         print(
             (
-                'Could not access some executables, make sure they exist '
-                f'and path is provided in \"{kwargs["config_file"]}\" '
-                'or in the command as a flag. Type `cpc -h` for help.'
+                "Could not access some executables, make sure they exist "
+                f'and path is provided in "{kwargs["config_file"]}" '
+                "or in the command as a flag. Type `cpc -h` for help."
             )
         )
         exit(1)
 
     print("Initializing tests...")
     for test in range(tests_count):
-        with open(f'./{generator}') as f:
+        with open(f"./{generator}") as f:
             generator_process = subprocess.run(
                 [f.name], stdout=subprocess.PIPE, shell=True
             )
 
-            generated_input = generator_process.stdout.decode('utf-8')
+            generated_input = generator_process.stdout.decode("utf-8")
 
-        with open(f'./{bruteforce}') as f:
+        with open(f"./{bruteforce}") as f:
             bruteforce_process = subprocess.Popen(
                 [f.name], stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True
             )
-            bruteforce_process.stdin.write(generated_input.encode('utf-8'))
+            bruteforce_process.stdin.write(generated_input.encode("utf-8"))
             bruteforce_process.stdin.close()
             bruteforce_output = (
-                bruteforce_process.stdout.read().decode('utf-8').splitlines()
+                bruteforce_process.stdout.read().decode("utf-8").splitlines()
             )
 
-        with open(f'./{optimized}') as f:
+        with open(f"./{optimized}") as f:
             optimized_process = subprocess.Popen(
                 [f.name], stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True
             )
-            optimized_process.stdin.write(generated_input.encode('utf-8'))
+            optimized_process.stdin.write(generated_input.encode("utf-8"))
             optimized_process.stdin.close()
             optimized_output = (
-                optimized_process.stdout.read().decode('utf-8').splitlines()
+                optimized_process.stdout.read().decode("utf-8").splitlines()
             )
 
         if not diff(bruteforce_output, optimized_output):
             print(".", end="")
         else:
-            print(colored(f'Failed for input:\n{generated_input}', "red"))
-            no_halt = kwargs['no_halt'] if kwargs['no_halt'] is not None else False
+            print(colored(f"Failed for input:\n{generated_input}", "red"))
+            no_halt = kwargs["no_halt"] if kwargs["no_halt"] is not None else False
             if not no_halt:
                 exit(1)
 
