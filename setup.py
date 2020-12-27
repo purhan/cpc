@@ -27,11 +27,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=get_install_requires(),
     python_requires='>=3.6',
-    entry_points={
-        'console_scripts': [
-            'cpc = src.main:main'
-        ]
-    },
+    entry_points={'console_scripts': ['cpc = src.main:main']},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

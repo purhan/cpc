@@ -1,9 +1,10 @@
-from getpass import getpass
 import os
-import time
-import requests
 import sys
+import time
 import traceback
+from getpass import getpass
+
+import requests
 from bs4 import BeautifulSoup as bs
 
 
@@ -19,19 +20,50 @@ class ErrorException(Exception):
 
 
 class Submission:
-    extensions = ((('++', 'cpp'), ('GNU C', 'c'), ('JavaScript', 'js'),
-                   ('Java', 'java'), ('Py', 'py'), ('Delphi', 'dpr'),
-                   ('FPC', 'pas'), ('C#', 'cs'), ('D', 'd'), ('Q#', 'qs'),
-                   ('Node', 'js'), ('Kotlin', 'kt'), ('Go', 'go'),
-                   ('Ruby', 'rb'), ('Rust', 'rs'), ('Perl', 'pl'), ('Scala',
-                                                                    'scala'),
-                   ('PascalABC', 'pas'), ('Haskell', 'hs'), ('PHP', 'php')),
-                  (('++', 'cpp'), ('gcc', 'c'), ('clang', 'c'),
-                   ('JavaScript', 'js'), ('Java', 'java'), ('Python', 'py'),
-                   ('C#', 'cs'), ('D ', 'd'), ('Node', 'js'), ('Kotlin', 'kt'),
-                   ('Go ', 'go'), ('Ruby', 'rb'), ('Rust', 'rs'),
-                   ('Perl', 'pl'), ('Scala', 'scala'), ('Pascal', 'pas'),
-                   ('Haskell', 'hs'), ('PHP', 'php')))
+    extensions = (
+        (
+            ('++', 'cpp'),
+            ('GNU C', 'c'),
+            ('JavaScript', 'js'),
+            ('Java', 'java'),
+            ('Py', 'py'),
+            ('Delphi', 'dpr'),
+            ('FPC', 'pas'),
+            ('C#', 'cs'),
+            ('D', 'd'),
+            ('Q#', 'qs'),
+            ('Node', 'js'),
+            ('Kotlin', 'kt'),
+            ('Go', 'go'),
+            ('Ruby', 'rb'),
+            ('Rust', 'rs'),
+            ('Perl', 'pl'),
+            ('Scala', 'scala'),
+            ('PascalABC', 'pas'),
+            ('Haskell', 'hs'),
+            ('PHP', 'php'),
+        ),
+        (
+            ('++', 'cpp'),
+            ('gcc', 'c'),
+            ('clang', 'c'),
+            ('JavaScript', 'js'),
+            ('Java', 'java'),
+            ('Python', 'py'),
+            ('C#', 'cs'),
+            ('D ', 'd'),
+            ('Node', 'js'),
+            ('Kotlin', 'kt'),
+            ('Go ', 'go'),
+            ('Ruby', 'rb'),
+            ('Rust', 'rs'),
+            ('Perl', 'pl'),
+            ('Scala', 'scala'),
+            ('Pascal', 'pas'),
+            ('Haskell', 'hs'),
+            ('PHP', 'php'),
+        ),
+    )
 
     def __init__(self, site, raw_data, gym, handle, merge):
         if site == 'codeforces':
@@ -99,29 +131,37 @@ class Submission:
 
     def __str__(self):
         if self.site == 'codeforces':
-            return 'Platform: Codeforces, Submission: {}, Contest: {}, Problem: {}'.format(
-                self.get_id(), self.get_contest(), self.get_index())
+            return (
+                'Platform: Codeforces, Submission: {}, Contest: {}, Problem: {}'.format(
+                    self.get_id(), self.get_contest(), self.get_index()
+                )
+            )
         return 'Platform: SPOJ, Submission: {}, Problem: {}'.format(
-            self.get_id(), self.get_problem())
+            self.get_id(), self.get_problem()
+        )
 
 
 class Scraper:
 
-    get_url = 'http://codeforces.com/{contest_type}/{contest_id}/submission/{submission_id}'
+    get_url = (
+        'http://codeforces.com/{contest_type}/{contest_id}/submission/{submission_id}'
+    )
 
-    def __init__(self,
-                 cf_handle=None,
-                 cf_password=None,
-                 spoj_handle=None,
-                 spoj_password=None,
-                 codeforces=None,
-                 spoj=None,
-                 get_regular=None,
-                 get_gym=None,
-                 split_gym=None,
-                 folders=None,
-                 download_wrong_submissions=None,
-                 verbose=True):
+    def __init__(
+        self,
+        cf_handle=None,
+        cf_password=None,
+        spoj_handle=None,
+        spoj_password=None,
+        codeforces=None,
+        spoj=None,
+        get_regular=None,
+        get_gym=None,
+        split_gym=None,
+        folders=None,
+        download_wrong_submissions=None,
+        verbose=True,
+    ):
         self.cf_handle = cf_handle
         self.cf_password = cf_password
         self.codeforces = codeforces
@@ -149,20 +189,20 @@ class Scraper:
 
     def start(self):
         if self.codeforces is None:
-            self.codeforces = self.get_input(
-                'Download codeforces submissions? [y/N]: ')
+            self.codeforces = self.get_input('Download codeforces submissions? [y/N]: ')
         if self.codeforces:
             if self.cf_handle is None:
-                self.cf_handle = input(
-                    'Enter your codeforces handle: ').lower()
+                self.cf_handle = input('Enter your codeforces handle: ').lower()
             else:
                 self.cf_handle = self.cf_handle.lower()
             if self.get_regular is None:
                 self.get_regular = self.get_input(
-                    'Download regular contests submissions? [y/N]: ')
+                    'Download regular contests submissions? [y/N]: '
+                )
             if self.get_gym is None:
                 self.get_gym = self.get_input(
-                    'Download gym contests submissions? [y/N]: ')
+                    'Download gym contests submissions? [y/N]: '
+                )
             if self.get_gym and self.cf_password is None:
                 self.cf_password = getpass(
                     'Password is required for gym contests, please enter your password: '
@@ -173,10 +213,12 @@ class Scraper:
                 )
             if self.folders is None:
                 self.folders = self.get_input(
-                    'Create folders separately for each contest? [y/N]: ')
+                    'Create folders separately for each contest? [y/N]: '
+                )
             if self.download_wrong_submissions is None:
                 self.download_wrong_submissions = self.get_input(
-                    'Download wrong submissions alongside AC? [y/N]: ')
+                    'Download wrong submissions alongside AC? [y/N]: '
+                )
         if self.spoj is None:
             self.spoj = self.get_input('Download spoj submissions? [y/N]: ')
         if self.spoj:
@@ -202,23 +244,25 @@ class Scraper:
                         if self.split_gym:
                             self.check_path(
                                 os.path.join(
-                                    os.path.join('codeforces', self.cf_handle),
-                                    'gym'))
+                                    os.path.join('codeforces', self.cf_handle), 'gym'
+                                )
+                            )
                         else:
-                            self.check_path(
-                                os.path.join('codeforces', self.cf_handle))
+                            self.check_path(os.path.join('codeforces', self.cf_handle))
                     if self.get_regular and self.contests_set:
                         if self.split_gym:
                             self.check_path(
                                 os.path.join(
-                                    os.path.join('codeforces', self.cf_handle),
-                                    'normal'))
+                                    os.path.join('codeforces', self.cf_handle), 'normal'
+                                )
+                            )
                         else:
-                            self.check_path(
-                                os.path.join('codeforces', self.cf_handle))
+                            self.check_path(os.path.join('codeforces', self.cf_handle))
                     self.data = self.req.get(
-                        'http://codeforces.com/api/user.status?handle={}'.
-                        format(self.cf_handle)).json()
+                        'http://codeforces.com/api/user.status?handle={}'.format(
+                            self.cf_handle
+                        )
+                    ).json()
                     self.get_submissions()
                     self.set_downloaded('codeforces', self.cf_handle)
                     if self.errors and self.verbose:
@@ -237,9 +281,7 @@ class Scraper:
                     if self.downloaded:
                         self.set_downloaded('codeforces', self.cf_handle)
                     if self.verbose:
-                        print(
-                            'Keyboard interrupt (CTRL^C) was pressed, exiting.'
-                        )
+                        print('Keyboard interrupt (CTRL^C) was pressed, exiting.')
                     exit(0)
         if self.spoj:
             if self.verbose:
@@ -268,9 +310,7 @@ class Scraper:
                     if self.downloaded:
                         self.set_downloaded('spoj', self.spoj_handle)
                     if self.verbose:
-                        print(
-                            'Keyboard interrupt (CTRL^C) was pressed, exiting.'
-                        )
+                        print('Keyboard interrupt (CTRL^C) was pressed, exiting.')
                     exit(0)
 
     def login(self):
@@ -293,7 +333,7 @@ class Scraper:
             'next_raw': '/',
             'autologin': 1,
             'login_user': self.spoj_handle,
-            'password': self.spoj_password
+            'password': self.spoj_password,
         }
         self.req.post('https://www.spoj.com', data=data)
         page = self.req.get('https://www.spoj.com/myaccount')
@@ -303,8 +343,8 @@ class Scraper:
     def get_info(self):
         for i, gym_status in enumerate(('false', 'true')):
             data = self.req.get(
-                'http://codeforces.com/api/contest.list?gym={}'.format(
-                    gym_status)).json()
+                'http://codeforces.com/api/contest.list?gym={}'.format(gym_status)
+            ).json()
             if data['status'] != 'OK':
                 raise ErrorException('Error getting contests info.')
             for contest in data['result']:
@@ -338,15 +378,22 @@ class Scraper:
     def get_submissions(self):
         if self.data['status'] != 'OK':
             raise ErrorException('Error getting submission info.')
-        submissions = (Submission('codeforces', raw_data, raw_data['contestId']
-                                  in self.gym_set, self.cf_handle,
-                                  self.split_gym is False)
-                       for raw_data in self.data['result'])
+        submissions = (
+            Submission(
+                'codeforces',
+                raw_data,
+                raw_data['contestId'] in self.gym_set,
+                self.cf_handle,
+                self.split_gym is False,
+            )
+            for raw_data in self.data['result']
+        )
         for submission in submissions:
-            if submission.get_problem() in self.downloaded or (
-                    submission.is_gym()
-                    and not self.get_gym) or (not submission.is_gym()
-                                              and not self.get_regular):
+            if (
+                submission.get_problem() in self.downloaded
+                or (submission.is_gym() and not self.get_gym)
+                or (not submission.is_gym() and not self.get_regular)
+            ):
                 continue
             if self.verbose:
                 print('Downloading --> {}'.format(submission))
@@ -364,8 +411,11 @@ class Scraper:
         for row in rows:
             link = row.find('a')['href']
             splitted = link.split('/')[2].split(',')
-            if len(splitted) == 1 or splitted[
-                    0] in self.downloaded or splitted[0] == '':
+            if (
+                len(splitted) == 1
+                or splitted[0] in self.downloaded
+                or splitted[0] == ''
+            ):
                 continue
             page = self.req.get('https://spoj.com{}'.format(link))
             soup = bs(page.text, 'html.parser')
@@ -375,12 +425,17 @@ class Scraper:
             soup = bs(page.text, 'html.parser')
             lang = soup.find_all('option', {'selected': True})[0].text
             submission = Submission(
-                'spoj', {
+                'spoj',
+                {
                     'language': lang,
                     'source': page.text,
                     'problem': splitted[0],
-                    'id': sub_id
-                }, False, self.spoj_handle, False)
+                    'id': sub_id,
+                },
+                False,
+                self.spoj_handle,
+                False,
+            )
             if self.verbose:
                 print('Downloading --> {}'.format(submission))
             self.process_spoj_submission(submission)
@@ -388,9 +443,12 @@ class Scraper:
     def get_source_code(self, submission):
         contest_type = 'gym' if submission.is_gym() else 'contest'
         page = self.req.get(
-            self.get_url.format(contest_type=contest_type,
-                                contest_id=submission.get_contest(),
-                                submission_id=submission.get_id()))
+            self.get_url.format(
+                contest_type=contest_type,
+                contest_id=submission.get_contest(),
+                submission_id=submission.get_id(),
+            )
+        )
         soup = bs(page.text, 'html.parser')
         ret = soup.find(id='program-source-text')
         if ret is None:
@@ -400,14 +458,16 @@ class Scraper:
 
     def process_submission(self, submission):
         if self.folders:
-            contest_path = os.path.join(submission.get_directory(),
-                                        str(submission.get_contest()))
+            contest_path = os.path.join(
+                submission.get_directory(), str(submission.get_contest())
+            )
             self.check_path(contest_path)
             file_path = os.path.join(contest_path, submission.get_path())
         else:
             file_path = os.path.join(
                 submission.get_directory(),
-                submission.get_problem() + '.' + submission.extension)
+                submission.get_problem() + '.' + submission.extension,
+            )
 
         if submission.get_verdict() == "OK":
             with open(file_path, 'w') as f:
@@ -426,15 +486,15 @@ class Scraper:
             if got:
                 if cnt == 0:
                     pos = line.index('>')
-                    self.result += line[pos + 1:]
+                    self.result += line[pos + 1 :]
                     cnt += 1
                 else:
                     self.result += line
                 self.result += '\n'
         if self.result:
             with open(
-                    os.path.join(submission.get_directory(),
-                                 submission.get_path()), 'w') as f:
+                os.path.join(submission.get_directory(), submission.get_path()), 'w'
+            ) as f:
                 f.write(self.result)
             self.downloaded.add(submission.get_problem())
         else:

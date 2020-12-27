@@ -158,3 +158,6 @@ pip-selfcheck.json
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+
+### manual testing ###
+.cpcrc
