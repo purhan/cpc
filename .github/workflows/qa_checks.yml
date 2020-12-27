@@ -1,0 +1,15 @@
+name: lint_python
+on: [pull_request, push]
+jobs:
+  lint_python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: pip install --upgrade pip wheel
+      - run: pip install black isort
+      - run: black --check . || true
+      - run: isort --profile black . || true
+      - run: pip install -r requirements.txt
+      - run: pytest . || true
+      - run: shopt -s globstar && pyupgrade --py36-plus **/*.py || true
