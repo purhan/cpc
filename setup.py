@@ -17,7 +17,7 @@ def get_install_requires():
 
 setuptools.setup(
     name="cpc",
-    version="0.0.3",
+    version="0.1.0",
     author="Purhan Kaushik",
     author_email="purhan01@gmail.com",
     description="A CLI for competitive programmers",
