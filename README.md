@@ -45,7 +45,7 @@ cpc <sub-command> -cf <path/to/.cpcrc>
 This is very useful for the [stress testing](#stress-testing) command. Below is an example configuration:
 
 ```yaml
-precommand: 
+precommand: |
     # To compile code into executables
     g++ -std=c++17 testcase_generator.cpp -o generator
     g++ -std=c++17 main.cpp -o optimized
