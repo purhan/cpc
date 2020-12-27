@@ -32,12 +32,9 @@ def list_split(command):
     return res
 
 
-def main(*args, **kwargs):
-    try:
-        precommand = str(kwargs["precommand"])
-        subprocess.call(list_split(precommand), shell=False)
-    except:
-        pass
+def main(precommand, *args, **kwargs):
+    if precommand:
+        os.system(precommand)
 
     tests_count = int(kwargs["count"] or 100)
     executables_exist = True
@@ -69,7 +66,7 @@ def main(*args, **kwargs):
         print(
             (
                 "Could not access some executables, make sure they exist "
-                f'and path is provided in "{kwargs["config_file"]}" '
+                "and path is provided in '.cpcrc' "
                 "or in the command as a flag. Type `cpc -h` for help."
             )
         )

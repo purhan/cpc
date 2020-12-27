@@ -64,12 +64,12 @@ def scrape():
 @click.option("--bruteforce", "-b", type=click.Path())
 @click.option("--optimized", "-o", type=click.Path())
 @click.option("--testcase_generator", "-tg", type=click.Path())
-@click.option("--config_file", "-cf", type=click.Path(), hidden=True)
-def test(config_file=".cpcrc", *args, **kwargs):
+@click.option("--config_file", "-cf", type=click.Path(), default=".cpcrc")
+def test(precommand, *args, **kwargs):
     """
     Stress test a solution against bruteforce
     """
-    solution_tester.main(*args, **kwargs)
+    solution_tester.main(precommand, *args, **kwargs)
 
 
 if __name__ == "__main__":
